@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+*{
+    font-family: 'Source Sans Pro', sans-serif !important;
+    margin: 0;
+    padding: 0;
+}
+
+
+  
+body{
+    background-color: grey;
+}
+
+.error{
+    position:absolute;
+    top: 15%;
+    background-color: lightgrey;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.error h1{
+    text-align: center;
+}
+
+.hero{
+    display: flex;
+    flex-direction: column;
+    background-color: grey;
+    position:fixed;
+    top: 0;
+    height: 345px;
+}
+.hero div{
+    width: 100vw;
+}
+.hero #title{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+}
+.hero h1{
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+    position: absolute;
+    margin-top: 20px;
+    z-index: 2;
+}
+.hero h2{
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    font-size: 15px;
+    margin-top: 45px;
+    z-index: 2;
+
+}
+.hero h3{
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    font-size: 20px;
+    z-index: 2;
+
+}
+
+.hero #chart{
+    width: 100%;
+    margin-top: -15px;
+    margin-bottom: 15px;
+    padding-bottom: -100px;
+}
+
+
+
+
+.navbar{
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    background-color: darkgrey;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding-bottom: 5px;
+}
+.navbar div{
+    width: 33%;
+    margin-top: 15px;
+    text-align: center;
+
+}
+.navbar span{
+    font-size: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    transition-duration: 0.25s;
+}
+.active{
+    border-radius: 5px;
+    background-color: #57a3ff85
+}
+
+
+
+
+
+
+
+
+.assets{
+    width: 100vw;
+    scroll-snap-align: start;
+    height: inherit;
+}
+
+.assets #items{
+    padding-bottom: 5px;
+    width: 100vw;
+}
+.assets #item{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    background-color: lightgray;
+    margin-top:5px;
+    border-radius: 10px;
+    margin-right: 7.5px;
+    margin-left: 7.5px;
+    height: 75px;
+}
+
+.assets #cryptoIcon{
+    height: 30px;
+    width: 30px;
+    margin-top: 22.5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.assets #amount{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.assets #amount span{
+    color: rgb(32,32,32);
+    font-size: 14px;
+}
+.assets #change{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.assets #price{
+    position: absolute;
+    right: 15px;
+    height: 75px;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+}
+.assets #price img{
+    height: 15px;
+    width: 15px;
+    margin-top: 5px;
+    margin-right: 1.5px;
+}
+.assets #amount h2{
+    font-size: 18px;
+}
+
+.assets #price h1{
+    font-size: 19px;
+    text-align: right;
+}
+
+
+
+.pages{
+    display: flex;
+    scroll-snap-type: x mandatory;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    background-color: darkgrey;
+    height: inherit;
+}
+
+
+.orders{
+    scroll-snap-align: start;
+    width: 100vw;
+}
+
+.orders #items{
+    padding-bottom: 5px;
+    width: 100vw;
+}
+.orders #item{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    background-color: lightgray;
+    margin-top:5px;
+    border-radius: 10px;
+    margin-right: 7.5px;
+    margin-left: 7.5px;
+    height: 75px;
+    width: calc(100vw - 15px);
+}
+
+.orders #info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+}
+.orders #amount{
+    position: absolute;
+    right: 15px;
+    height: 75px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.orders #amount h2, .orders #amount h1{
+    text-align: right;
+    font-size: 20px;
+}
+.orders span{
+    color: rgb(32,32,32);
+    font-size: 17px;
+}
+.orders #info h2{
+    font-size: 19px;;
+}
+
+.settings{
+    scroll-snap-align: start;
+    width: 100vw;
+}
+.settings #settingItems{
+    width: 100vw;
+}
+.settings #item{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-top:5px;
+    margin-left: 10px;
+    width: calc(100vw - 15px);
+}
+.settings input{
+    width: 75%;
+    height: 30px;
+    background-color: lightgrey;
+    border: none;
+    font-size: 20px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+.settings button{
+    width: 24%;
+    margin-left: 1%;
+    height: 30px;
+    background-color: #57A4FF;
+    border: none;
+    font-size: 20px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+.settings img{
+    height: 25px;
+    margin-left: 5px;
+}
+
+
+.scroll{
+    position: relative;
+    margin-top: 300px;
+    height: calc(100vh - 65px);
+    overflow: hidden;
+    z-index: 2;
+}
