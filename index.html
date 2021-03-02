@@ -7,15 +7,25 @@
         <title>wallet</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
         <link rel="stylesheet" href="index.css">
-        <link rel="manifest" href="manifest.json">#
+        <link rel="manifest" href="manifest.json">
         <link rel="apple-touch-icon" sizes="512x512" href="./resources/wallet.png">
     </head>
     <body onload="loadData(null);" >
-        
-        <section class="hero">
-            <div id="total"></div>
-            <div id="chart" style="width: 100%"></div>
+        <div class="theme" onclick="toggleTheme()">
+            <img id="themeImg"src="./resources/light.svg">
+        </div>
+        <section class="heroscroll">
+            <div class="wrapper">
+                <section class="hero">
+                    <div id="total"></div>
+                    <div id="chart" style="width: 100%"></div>
+                </section>
+                <section class="timeChart" id="timeChart">
+                    
+                </section>
+            </div>
         </section>
         <section class="scroll">
             <div class="navbar">
@@ -29,6 +39,7 @@
                 </section>
                 <section class="orders">
                     <div id="orderItems">
+			            <h1 id="noOpenOrders"style="display:none; width: 100vw;text-align:center;font-size: 20px;">no open orders</h>
                     </div>
                 </section>
                 <section class="settings">
@@ -52,8 +63,11 @@
                 </section>
             </section>
         </section>
+        
+
         <script src="https://code.highcharts.com/highcharts.src.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        
         <script src="index.js"async></script>
     </body>
 </html>

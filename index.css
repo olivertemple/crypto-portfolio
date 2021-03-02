@@ -3,18 +3,34 @@
     font-family: 'Source Sans Pro', sans-serif !important;
     margin: 0;
     padding: 0;
+    transition-duration: 100ms;
 }
 
+.light{
+    --bg-color1: grey;
+    --bg-color2: lightgrey;
+    --bg-color3: darkgrey;
+    --text: rgb(32,32,32);
+    color: black;
+    --button: rgb(55,55,55)
+}
+.dark{
+    --bg-color1: black;
+    --bg-color2: rgb(55, 55, 55);
+    --bg-color3: rgb(32,32,32);
+    --text: darkgrey;
+    color: lightgrey;
+    --button:lightgrey
+}
 
-  
 body{
-    background-color: grey;
+    background-color: var(--bg-color1);
 }
 
 .error{
     position:absolute;
     top: 15%;
-    background-color: lightgrey;
+    background-color: var(--bg-color2);
     border-radius: 20px;
     font-size: 14px;
     margin-right: 10px;
@@ -24,13 +40,33 @@ body{
     text-align: center;
 }
 
+.heroscroll{
+    width: 100vw;
+    overflow:scroll;
+    position: fixed;
+    top:0;
+    scroll-snap-type: x mandatory;
+}
+.wrapper{
+    display: flex;
+    width: 200vw;
+}
+
+.timeChart{
+    scroll-snap-align: start;
+    width: 100vw;
+    height: 345px;
+    background-color: var(--bg-color1);
+    z-index: 100;
+}
 .hero{
+    scroll-snap-align: start;
+
     display: flex;
     flex-direction: column;
-    background-color: grey;
-    position:fixed;
-    top: 0;
+    background-color: var(--bg-color1);
     height: 345px;
+    position: relative;
 }
 .hero div{
     width: 100vw;
@@ -38,12 +74,11 @@ body{
 .hero #title{
     display: flex;
     flex-direction: column;
-    position: absolute;
 }
 .hero h1{
     text-align: center;
     vertical-align: middle;
-    width: 100%;
+    width: 100vw;
     position: absolute;
     margin-top: 20px;
     z-index: 2;
@@ -51,7 +86,7 @@ body{
 .hero h2{
     position: absolute;
     text-align: center;
-    width: 100%;
+    width: 100vw;
     font-size: 15px;
     margin-top: 45px;
     z-index: 2;
@@ -60,7 +95,7 @@ body{
 .hero h3{
     position: absolute;
     text-align: center;
-    width: 100%;
+    width: 100vw;
     font-size: 20px;
     z-index: 2;
 
@@ -71,6 +106,7 @@ body{
     margin-top: -15px;
     margin-bottom: 15px;
     padding-bottom: -100px;
+    overflow: hidden;
 }
 
 
@@ -80,7 +116,7 @@ body{
     display: flex;
     flex-direction: row;
     width: 100vw;
-    background-color: darkgrey;
+    background-color: var(--bg-color3);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     padding-bottom: 5px;
@@ -101,7 +137,12 @@ body{
     border-radius: 5px;
     background-color: #57a3ff85
 }
-
+.navbar #theme{
+    background-color: red;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+}
 
 
 
@@ -112,18 +153,21 @@ body{
 .assets{
     width: 100vw;
     scroll-snap-align: start;
-    height: inherit;
+    height: calc(100vh - 100px);
 }
 
 .assets #items{
-    padding-bottom: 5px;
+    padding-bottom: 20px;
     width: 100vw;
+    height: inherit;
+    overflow: scroll;
 }
+
 .assets #item{
     position: relative;
     display: flex;
     flex-direction: row;
-    background-color: lightgray;
+    background-color: var(--bg-color2);
     margin-top:5px;
     border-radius: 10px;
     margin-right: 7.5px;
@@ -144,7 +188,7 @@ body{
     justify-content: center;
 }
 .assets #amount span{
-    color: rgb(32,32,32);
+    color: var(--text);
     font-size: 14px;
 }
 .assets #change{
@@ -182,7 +226,7 @@ body{
     scroll-snap-type: x mandatory;
     overflow-x: scroll;
     scroll-behavior: smooth;
-    background-color: darkgrey;
+    background-color: var(--bg-color3);
     height: inherit;
 }
 
@@ -200,7 +244,7 @@ body{
     position: relative;
     display: flex;
     flex-direction: row;
-    background-color: lightgray;
+    background-color: var(--bg-color2);
     margin-top:5px;
     border-radius: 10px;
     margin-right: 7.5px;
@@ -228,7 +272,7 @@ body{
     font-size: 20px;
 }
 .orders span{
-    color: rgb(32,32,32);
+    color: var(--text);
     font-size: 17px;
 }
 .orders #info h2{
@@ -253,7 +297,7 @@ body{
 .settings input{
     width: 75%;
     height: 30px;
-    background-color: lightgrey;
+    background-color: var(--bg-color2);
     border: none;
     font-size: 20px;
     border-radius: 10px;
@@ -275,10 +319,49 @@ body{
 }
 
 
+
+
+
 .scroll{
     position: relative;
-    margin-top: 300px;
+    margin-top: 345px;
     height: calc(100vh - 65px);
     overflow: hidden;
     z-index: 2;
+}
+
+.theme{
+    position:fixed;
+    background-color: var(--bg-color2);
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    top:10px;
+    right:10px;
+    z-index: 5;
+    box-shadow: 0px 0px 10px var(--bg-color2);
+}
+.theme img{
+    height: 35px;
+    width: 35px;
+    margin-top: 2.5px;
+    margin-left: 2.5px;
+    z-index: 6;
+    border-radius: 50%;
+}
+#transitionTheme{
+    animation: animateTheme 1s cubic-bezier(0,.91,.74,.5);
+}
+#transitionTheme img{
+    animation: animateImg 1s linear;
+}
+
+@keyframes animateTheme{
+    0% {box-shadow: 0 0 0 calc(100vh + 100vw) var(--button); background-color: var(--button);}
+    100% {box-shadow: 0 0 0 0 var(--bg-color2); background-color: var(--bg-color2)}
+}
+@keyframes animateImg{
+    0% {opacity: 1;}
+    80% {opacity: 0;}
+    100% {opacity: 1;}
 }

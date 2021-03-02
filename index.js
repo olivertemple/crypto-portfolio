@@ -9,29 +9,32 @@ function showError(){
     div.appendChild(heading)
     document.getElementsByTagName("body")[0].appendChild(div)
 }
-
+pieHeight = null
+changeTheme()
 try{
     data = JSON.parse(localStorage.Data)
     displayPrice()
     draw2(1000)
     showAssets()
+    plotLine(JSON.parse(localStorage.histData))
 }catch(error){
     console.log("no stored data")
 }
 
-key = "BJt2jYCTXZKvMJkrrhXRxVa5qtwpUuIL0MHtZiZFpkw810n3Mei3Xbz7QzdQlMEm"
-secret = "UblqJgYTOf0WAvH5HjZNAj3RJFu8NbowVwOilHscVDaB7dY0gAojNgLoVY4PuLRe"
 function loadData(animate){
     var req = new XMLHttpRequest();
-    req.open("POST", ("http://192.168.1.117:5000/"), true);
+    req.open("POST", ("https://olivertemple.ddns.net/flask/wallet"), true);
         req.setRequestHeader('Content-Type', 'application/json');
         req.onload = function(){
+	    testData = req.response
+	    console.log(req.response)
             data = JSON.parse(req.response)
             data.time = new Date()
             localStorage.Data = JSON.stringify(data)
             displayPrice()
             draw2(animate)
             showAssets()
+	    getHistData()
         }
         req.send(JSON.stringify({
             "key": localStorage.APIkey, "secret":localStorage.APIsecret
@@ -41,15 +44,100 @@ function loadData(animate){
         }
 
     var orderReq = new XMLHttpRequest();
-    orderReq.open("POST", ("http://192.168.1.117:5000/orders"), true);
+    orderReq.open("POST", ("https://olivertemple.ddns.net/flask/orders"), true);
     orderReq.setRequestHeader('Content-Type', 'application/json');
     orderReq.onload = function(){
         orders = JSON.parse(orderReq.response)
         showOrders()
+	if (orders.orders.length == 0){
+	    document.getElementById("noOpenOrders").setAttribute("style","display:block")
+        }
     }
     orderReq.send(JSON.stringify({
         "key": localStorage.APIkey, "secret":localStorage.APIsecret
     }));
+}
+
+
+function getHistData(){
+    var histReq = new XMLHttpRequest();
+    histReq.open("POST","https://olivertemple.ddns.net/flask/histData",true)
+    histReq.setRequestHeader("Content-Type","application/json");
+    histReq.onload = function(){
+        resp = histReq.response.replaceAll("u","")
+        resp = eval(resp)
+        localStorage.histData = JSON.stringify(resp)
+        plotLine(resp)
+    };
+    histReq.send(JSON.stringify({
+        "key":localStorage.APIkey
+    }))
+}
+
+
+function plotLine(dataToPlot){
+    Highcharts.chart(("timeChart"),{
+        chart: {
+	    type:"area",
+            zoomType: "x",
+            backgroundColor: chartColor,
+	        height:320,
+        },
+        title:{
+            text:"portfolio value",
+            style:{
+                font:'bold "Source Sans Pro", sans-serif',
+                color:chartText,
+            }
+        },
+        xAxis:{
+            type:"datetime",
+	    labels:{
+		    enabled:false
+	    }
+        },
+        yAxis:{
+            title:{
+                text:"value",
+                style:{
+                    color:chartText
+                }
+            },
+            labels:{
+                style:{
+                    color:chartText
+                }
+            }
+        },
+        toolTip:{
+            formatter: function(tooltip){
+                return this.point.name +": £"+(Math.round(parseFloat(this.point.value)*100))/100
+            }
+        },
+        plotOptions: {
+            area: {
+                marker: {
+                    enabled: false,
+                    symbol: 'circle',
+                    radius: 2,
+                    states: {
+                        hover: {
+                            enabled: true
+                        }
+                    }
+                }
+            }
+        },
+        legend:{
+            enabled: false
+        },
+        series:[{
+	    name:"portfolio value",
+            data:dataToPlot,
+        }]
+    }
+    )
+    document.getElementsByClassName("highcharts-exporting-group")[1].setAttribute("style","display:none")
 }
 
 
@@ -83,8 +171,13 @@ function draw2(animate){
     var drawData = []
     data.assets.forEach(function(item){
         var dict = {}
-        dict.name = item.asset
         dict.y = ((parseFloat(item.value))/(data.total))*100
+        if(dict.y < 5){
+            dict.name = "other"
+        }else{
+            dict.name = item.asset
+        }
+        
         dict.value = item.value
         drawData.push(dict)
     })
@@ -95,7 +188,8 @@ function draw2(animate){
             plotBorderWidth: null,
             plotShadow: false,
             type: 'pie',
-            backgroundColor: "grey",
+            backgroundColor: chartColor,
+            height:pieHeight,
         },
         title: {
             text: null
@@ -116,7 +210,10 @@ function draw2(animate){
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style:{
+                        color: chartText
+                    }
                 },
                 animation:{
                     duration:animate
@@ -143,7 +240,8 @@ function noIcon(item, name){
 }
 function showAssets(){
     document.getElementById("items").innerHTML=""
-    data.assets.forEach(function(item){
+    for (i=0; i<data.assets.length;i++) {
+        item = data.assets[i]
         img = document.createElement("img")
         img.setAttribute("id","cryptoIcon")
         img.setAttribute("src","https://icons.bitbot.tools/api/"+item.asset.toLowerCase()+"/32x32")
@@ -202,8 +300,12 @@ function showAssets(){
         itemDiv.appendChild(img)
         itemDiv.appendChild(amountDiv)
         itemDiv.appendChild(priceDiv)
+	if (i == data.assets.length - 1){
+	    itemDiv.setAttribute("style","margin-bottom:20px")
+        }
         document.getElementById("items").appendChild(itemDiv)
-    })
+    }
+    document.querySelector("#chart").setAttribute("style","margin-top:-15px")
 }
 
 function showOrders(){
@@ -228,19 +330,13 @@ function showOrders(){
         amountSpan = document.createElement("span")
         amountSpan.appendChild(document.createTextNode("Amount: "))
         amountHeading.appendChild(amountSpan)
-        amountHeading.appendChild(document.createTextNode(item.origQty))
+        amountHeading.appendChild(document.createTextNode(parseFloat(item.origQty)))
         priceHeading = document.createElement("h2")
         priceSpan = document.createElement("span")
         priceSpan.appendChild(document.createTextNode("Price: "))
 
         priceHeading.appendChild(priceSpan)
-        if (parseFloat(item.price) < 1 ){
-            priceHeading.appendChild(document.createTextNode(Number.parseFloat(item.price).toPrecision(5)))
-        }else if (parseFloat(item.price) < 100 && parseFloat(item.price) >= 1){
-            priceHeading.appendChild(document.createTextNode(Number.parseFloat(item.price).toPrecision(5)))
-        }else{
-            priceHeading.appendChild(document.createTextNode(Number.parseFloat(item.price).toPrecision(7)))
-        }
+        priceHeading.appendChild(document.createTextNode(parseFloat(item.price)))
         
         amountDiv.appendChild(amountHeading)
         amountDiv.appendChild(priceHeading)
@@ -307,7 +403,6 @@ function scrollOrders(item){
     document.getElementsByClassName("active")[0].setAttribute("class","")
     item.children[0].setAttribute('class','active')
 }
-
 document.getElementsByClassName("pages")[0].addEventListener("scroll", touchStart, true)
 function touchStart(){
     assetPos = document.querySelector(".assets").getBoundingClientRect()
@@ -352,6 +447,40 @@ function touchEnd(evt){
     }
 }*/
 
+function changeTheme(){
+    if (localStorage.theme != undefined){
+        theme = localStorage.theme;
+        document.getElementsByTagName("body")[0].setAttribute("class",theme);
+        if (theme == "light"){
+            chartColor = "grey"
+            chartText = "black"
+            setTimeout(function() {document.getElementById("themeImg").setAttribute("src","./resources/light.svg")},800)
+            
+        }else{
+            chartColor = "black"
+            chartText = "lightgrey"
+            setTimeout(function() {document.getElementById("themeImg").setAttribute("src","./resources/dark.svg")},800)
+        }
+    }else{
+        localStorage.theme = "light"
+        changeTheme()
+    }
+}
+function toggleTheme(){
+    document.getElementsByClassName("theme")[0].setAttribute("id","transitionTheme")
+    if (localStorage.theme == "light"){
+        localStorage.theme = "dark"
+    }else if (localStorage.theme == "dark"){
+        localStorage.theme=("light")
+    }
+    changeTheme()
+    draw2(null)
+    plotLine(res)
+    setTimeout(function(){document.getElementsByClassName("theme")[0].setAttribute("id","")},1000)
+}
+
+
+
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", function() {
         navigator.serviceWorker
@@ -360,3 +489,20 @@ if ("serviceWorker" in navigator) {
         .catch(err => console.log("service worker not registered", err))
     })
 }
+
+
+window.addEventListener("orientationchange", function(event) {
+    if(event.target.screen.orientation.angle == 90){
+        document.querySelector("#chart").setAttribute("style","margin-top: 50px")
+        pieHeight=290
+        draw2()
+        document.querySelector(".scroll").setAttribute("style","margin-top:325px")
+    }else{
+        document.querySelector(".scroll").setAttribute("style","")
+        pieHeight=null
+        draw2()
+
+        document.querySelector("#chart").setAttribute("style","margin-top: 15px; width: 100vw;")
+
+    }
+  });
