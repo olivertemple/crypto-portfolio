@@ -42,7 +42,7 @@ body{
 
 .heroscroll{
     width: 100vw;
-    overflow:scroll;
+    overflow:none;
     position: fixed;
     top:0;
     scroll-snap-type: x mandatory;

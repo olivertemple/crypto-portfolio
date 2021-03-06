@@ -16,7 +16,7 @@ try{
     displayPrice()
     draw2(1000)
     showAssets()
-    plotLine(JSON.parse(localStorage.histData))
+    //plotLine(JSON.parse(localStorage.histData))
 }catch(error){
     console.log("no stored data")
 }
@@ -34,7 +34,7 @@ function loadData(animate){
             displayPrice()
             draw2(animate)
             showAssets()
-	    getHistData()
+	    //getHistData()
         }
         req.send(JSON.stringify({
             "key": localStorage.APIkey, "secret":localStorage.APIsecret
@@ -475,7 +475,7 @@ function toggleTheme(){
     }
     changeTheme()
     draw2(null)
-    plotLine(res)
+    //plotLine(res)
     setTimeout(function(){document.getElementsByClassName("theme")[0].setAttribute("id","")},1000)
 }
 
